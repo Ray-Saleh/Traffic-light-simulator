@@ -1,5 +1,34 @@
 package Data;
 
-public class vehicleQueue {
+import java.util.LinkedList;
+import java.util.Queue;
 
+public class vehicleQueue {
+    private Queue<vehicle> queue;
+
+    public vehicleQueue() {
+        this.queue = new LinkedList<>();
+    }
+
+    // Method to add a vehicle to the queue
+    public void enqueue(vehicle Vehicle) {
+        queue.offer(Vehicle);
+    }
+
+    // Method to remove and return the next vehicle in the queue
+    public vehicle dequeue() {
+        return queue.poll();
+    }
+
+    // Method to check if the queue is empty
+    public boolean isEmpty() {
+        return queue.isEmpty();
+    }
+
+    // Method to get the size of the queue
+    public int size() {
+        return queue.size();
+    }
+
+    // Additional methods as needed
 }
