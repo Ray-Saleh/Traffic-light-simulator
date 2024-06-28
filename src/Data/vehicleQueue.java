@@ -30,5 +30,9 @@ public class vehicleQueue {
         return queue.size();
     }
 
+    public Queue<vehicle> getQueue() {
+        return queue;
+    }
+
     // Additional methods as needed
 }

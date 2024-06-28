@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import UI.*;
+import Data.*;
+import java.util.Queue;
 
 public class trafficManagementSystem extends JFrame {
 
@@ -48,6 +50,22 @@ public class trafficManagementSystem extends JFrame {
 
         // Add mainPanel to the frame
         add(mainPanel);
+
+        // Example integration with VehicleQueue
+        vehicleQueue vQueue = new vehicleQueue();
+        for (int i = 0; i < 5; i++) {
+            vQueue.enqueue(new vehicle("ABC123" + i, "Car", 1)); // Example: Add vehicles to the queue
+        }
+
+        // Example: Update vehicle flow in UI every second (simulated)
+        Timer timer = new Timer(1000, e -> {
+            // Update vehicle flow information in the UI
+            if (vQueue != null) {
+                Queue<vehicle> vehicles = vQueue.getQueue(); // Example: Get vehicles from queue
+                flowPanel.updateVehicleFlow(vehicles); // Update flowPanel with vehicle details
+            }
+        });
+        timer.start();
 
         setVisible(true);
     }
