@@ -30,11 +30,12 @@ public class vehicleFlowPanel extends JPanel {
         // Update vehicle count label
         vehicleCountLabel.setText("Vehicle Count: " + vehicles.size());
 
-        // Update vehicle details area
+        // Update vehicle details and display all vehicles details
         StringBuilder detailsBuilder = new StringBuilder();
         for (vehicle vehicle : vehicles) {
             detailsBuilder.append("Type: ").append(vehicle.getType())
                     .append(", License Plate: ").append(vehicle.getLicensePlate())
+                    .append(", Size: ").append(vehicle.getSize())
                     .append("\n");
         }
         vehicleDetailsArea.setText(detailsBuilder.toString());

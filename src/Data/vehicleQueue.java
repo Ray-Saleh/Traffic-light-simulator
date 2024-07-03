@@ -34,5 +34,12 @@ public class vehicleQueue {
         return queue;
     }
 
+    // remove vehicles until there are only 10 in the queue
+    public void removeVehicles() {
+        while (queue.size() > 10) {
+            queue.poll();
+        }
+    }
+
     // Additional methods as needed
 }

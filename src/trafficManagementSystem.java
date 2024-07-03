@@ -2,9 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 import UI.*;
 import Data.*;
-import java.util.Queue;
+import java.util.Random;
 
 public class trafficManagementSystem extends JFrame {
+
+    private vehicleQueue vehicleQueue;
+    private vehicleFlowPanel flowPanel;
 
     public trafficManagementSystem() {
         setTitle("Traffic Management System");
@@ -31,7 +34,7 @@ public class trafficManagementSystem extends JFrame {
         trafficSignalsPanel signalsPanel = new trafficSignalsPanel();
         leftPanel.add(signalsPanel, BorderLayout.CENTER);
 
-        vehicleFlowPanel flowPanel = new vehicleFlowPanel();
+        flowPanel = new vehicleFlowPanel();
         leftPanel.add(flowPanel, BorderLayout.SOUTH);
 
         // Add components to rightPanel (e.g., CongestionPanel, AlertsPanel)
@@ -51,23 +54,29 @@ public class trafficManagementSystem extends JFrame {
         // Add mainPanel to the frame
         add(mainPanel);
 
-        // Example integration with VehicleQueue
-        vehicleQueue vQueue = new vehicleQueue();
-        for (int i = 0; i < 5; i++) {
-            vQueue.enqueue(new vehicle("ABC123" + i, "Car", 1)); // Example: Add vehicles to the queue
-        }
+        // Initialize vehicle queue
+        vehicleQueue = new vehicleQueue();
 
-        // Example: Update vehicle flow in UI every second (simulated)
-        Timer timer = new Timer(1000, e -> {
-            // Update vehicle flow information in the UI
-            if (vQueue != null) {
-                Queue<vehicle> vehicles = vQueue.getQueue(); // Example: Get vehicles from queue
-                flowPanel.updateVehicleFlow(vehicles); // Update flowPanel with vehicle details
-            }
-        });
-        timer.start();
+        Timer timer = new Timer(1000, e -> runSimulation());
+        timer.start(); // Start the timer to update vehicle flow every second
 
         setVisible(true);
+    }
+
+    // Simulation method to update the vehicle queue
+    private void runSimulation() {
+        // Add new vehicles to the queue (for example, every second)
+        String[] vehicleTypes = { "Sedan", "Truck", "Bus", "Motorcycle" };
+        String licensePlate = "XYZ" + new Random().nextInt(999); // Generate a random license plate
+        String vehicleType = vehicleTypes[new Random().nextInt(vehicleTypes.length)];
+        vehicle newVehicle = new vehicle(licensePlate, vehicleType, Math.random() < 0.5 ? 1 : 2);
+        vehicleQueue.enqueue(newVehicle);
+
+        // Optionally, remove old vehicles from the queue
+        if (vehicleQueue.size() > 10) { // For example, keep only the latest 10 vehicles
+            vehicleQueue.removeVehicles();
+        }
+        flowPanel.updateVehicleFlow(vehicleQueue.getQueue());
     }
 
     public static void main(String[] args) {
