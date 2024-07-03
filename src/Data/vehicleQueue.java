@@ -41,5 +41,12 @@ public class vehicleQueue {
         }
     }
 
+    // if called remove all cars but 1
+    public void removeVehiclesExceptOne() {
+        while (queue.size() > 1) {
+            queue.poll();
+        }
+    }
+
     // Additional methods as needed
 }

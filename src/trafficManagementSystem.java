@@ -2,12 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 import UI.*;
 import Data.*;
+import Logic.*;
 import java.util.Random;
 
 public class trafficManagementSystem extends JFrame {
 
     private vehicleQueue vehicleQueue;
     private vehicleFlowPanel flowPanel;
+    private signalController signalController;
 
     public trafficManagementSystem() {
         setTitle("Traffic Management System");
@@ -57,6 +59,16 @@ public class trafficManagementSystem extends JFrame {
         // Initialize vehicle queue
         vehicleQueue = new vehicleQueue();
 
+        // Initialize signal controller with a single signal
+        signalController = new signalController(vehicleQueue, flowPanel);
+        signalController.addSignal(new trafficSignal(10, 3, 7)); // Example durations
+
+        // Register TrafficSignalsPanel with SignalController
+        signalController.setTrafficSignalsPanel(signalsPanel);
+
+        // Start the signal controller
+        signalController.start();
+
         Timer timer = new Timer(1000, e -> runSimulation());
         timer.start(); // Start the timer to update vehicle flow every second
 
@@ -72,11 +84,22 @@ public class trafficManagementSystem extends JFrame {
         vehicle newVehicle = new vehicle(licensePlate, vehicleType, Math.random() < 0.5 ? 1 : 2);
         vehicleQueue.enqueue(newVehicle);
 
-        // Optionally, remove old vehicles from the queue
-        if (vehicleQueue.size() > 10) { // For example, keep only the latest 10 vehicles
-            vehicleQueue.removeVehicles();
-        }
         flowPanel.updateVehicleFlow(vehicleQueue.getQueue());
+
+        if (vehicleQueue.size() >= 7) {
+            // Force the signal to green
+            signalController.forceGreenSignal();
+
+            // Start a timer to turn the signal to yellow after 5-10 seconds
+            new Timer(new Random().nextInt(6) + 5 * 1000, e -> {
+                signalController.forceYellowSignal();
+
+                // Start another timer to turn the signal to red after 3-5 seconds
+                new Timer(new Random().nextInt(3) + 3 * 1000, ev -> {
+                    signalController.forceRedSignal();
+                }).start();
+            }).start();
+        }
     }
 
     public static void main(String[] args) {
