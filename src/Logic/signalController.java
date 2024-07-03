@@ -29,10 +29,6 @@ public class signalController {
         this.trafficSignalsPanel = trafficSignalsPanel;
     }
 
-    public void start() {
-        new Timer(1000, e -> updateSignals()).start();
-    }
-
     public void updateSignals() {
         if (!signals.isEmpty()) {
             trafficSignal signal = signals.get(0);

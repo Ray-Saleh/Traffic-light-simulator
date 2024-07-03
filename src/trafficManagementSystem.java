@@ -10,6 +10,7 @@ public class trafficManagementSystem extends JFrame {
     private vehicleQueue vehicleQueue;
     private vehicleFlowPanel flowPanel;
     private signalController signalController;
+    private congestionPanel congestionPanel;
 
     public trafficManagementSystem() {
         setTitle("Traffic Management System");
@@ -40,7 +41,7 @@ public class trafficManagementSystem extends JFrame {
         leftPanel.add(flowPanel, BorderLayout.SOUTH);
 
         // Add components to rightPanel (e.g., CongestionPanel, AlertsPanel)
-        congestionPanel congestionPanel = new congestionPanel();
+        congestionPanel = new congestionPanel();
         rightPanel.add(congestionPanel, BorderLayout.CENTER);
 
         alertsPanel alertsPanel = new alertsPanel();
@@ -67,8 +68,6 @@ public class trafficManagementSystem extends JFrame {
         signalController.setTrafficSignalsPanel(signalsPanel);
 
         // Start the signal controller
-        signalController.start();
-
         Timer timer = new Timer(1000, e -> runSimulation());
         timer.start(); // Start the timer to update vehicle flow every second
 
@@ -85,6 +84,11 @@ public class trafficManagementSystem extends JFrame {
         vehicleQueue.enqueue(newVehicle);
 
         flowPanel.updateVehicleFlow(vehicleQueue.getQueue());
+        signalController.updateSignals();
+
+        // Inside trafficManagementSystem class or where you update vehicle queue
+        int queueSize = vehicleQueue.size();
+        congestionPanel.updateCongestionLevel(queueSize);
 
         if (vehicleQueue.size() >= 7) {
             // Force the signal to green
